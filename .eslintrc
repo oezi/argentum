@@ -1,0 +1,17 @@
+{
+  "extends": "standard",                # Voreinstellung wie von https://standardjs.com/
+  "plugins": [
+      "react"
+  ],
+  "rules": {
+      "standard/no-callback-literal": "off", # kein Zwang zu node-style Callback
+      "camelcase": "warn",              # camelcase ist erwünscht, aber (noch) kein Zwang (damit alte Projekte nicht leuchten wie ein Weihnachtsbaum)
+      "max-len": ["warn", 120],         # maximale Zeilenlänge
+      "no-var": "error",                # immer "let" oder "const" statt "var"
+      "prefer-const": "error",          # immer "const" statt "let", wenn möglich
+      "arrow-parens": "error",          # immer Klammern um Parameter von arrow-functions
+      "react/jsx-uses-react": "error",  # nicht an "import React" meckern
+      "react/jsx-uses-vars": "error",   # JSX als Verwendung importierter komponenten erkennen
+      "semi": ["error", "always"]       # Semikolons sind Pflicht
+  }
+}
