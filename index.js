@@ -6,11 +6,14 @@ const bodyparser = require('body-parser');
 const pgpromise = require('pg-promise');
 const mssql = require('mssql');
 
+const logger = require('./modules/logger');
+
 module.exports = {
   express,
   compression,
   helmet,
   bodyparser,
   pgpromise,
-  mssql
+  mssql,
+  logger
 };
