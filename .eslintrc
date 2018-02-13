@@ -12,6 +12,7 @@
       "arrow-parens": "error",          # immer Klammern um Parameter von arrow-functions
       "react/jsx-uses-react": "error",  # nicht an "import React" meckern
       "react/jsx-uses-vars": "error",   # JSX als Verwendung importierter komponenten erkennen
-      "semi": ["error", "always"]       # Semikolons sind Pflicht
+      "semi": ["error", "always"],      # Semikolons sind Pflicht
+      "object-curly-spacing": "error"   # keine Lerzeichen in Objektdefinitionen
   }
 }
