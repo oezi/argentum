@@ -10,12 +10,15 @@ const log = (loglevel, level, ...params) => {
         color = colors.reset.red.bold;
         break;
       case 1:
+        output = console.warn;
         color = colors.reset.yellow.bold;
         break;
       case 2:
+        output = console.info;
         color = colors.reset;
         break;
       case 3:
+        output = console.debug;
         color = colors.reset.cyan;
         break;
     }
