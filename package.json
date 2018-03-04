@@ -11,12 +11,12 @@
   "description": "",
   "dependencies": {
     "body-parser": "^1.18.2",
-    "colors": "^1.1.2",
     "compression": "^1.7.2",
     "express": "^4.16.2",
     "helmet": "^3.11.0",
     "mssql": "^4.1.0",
-    "pg-promise": "^7.5.4"
+    "pg-promise": "^7.5.4",
+    "winston": "^3.0.0-rc1"
   },
   "devDependencies": {
     "eslint": "^4.18.1",
