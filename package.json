@@ -19,13 +19,6 @@
     "winston": "^3.0.0-rc1"
   },
   "devDependencies": {
-    "eslint": "^4.18.1",
-    "eslint-config-standard": "^11.0.0",
-    "eslint-plugin-import": "^2.9.0",
-    "eslint-plugin-node": "^5.2.1",
-    "eslint-plugin-promise": "^3.6.0",
-    "eslint-plugin-react": "^7.7.0",
-    "eslint-plugin-standard": "^3.0.1",
-    "nsp": "^3.2.1"
+    "hydrargyrion": "git+https://73460b035cd244121648a1a1973ab0b146dc9390:x-oauth-basic@github.com/oezi/hydrargyrion.git"
   }
 }
