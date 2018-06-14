@@ -9,6 +9,7 @@ const csrf = require('csurf');
 const cors = require('cors');
 const PgSession = require('connect-pg-simple')(session);
 
+const soap = require('./modules/soap');
 const logger = require('./modules/logger');
 
 module.exports = {
@@ -19,6 +20,7 @@ module.exports = {
   pgpromise,
   mssql,
   logger,
+  soap,
   session,
   csrf,
   cors,

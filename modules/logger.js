@@ -1,83 +1,68 @@
-const path = require('path');
+const colors = require('colors/safe');
 
-const winston = require('winston');
-
-const printf = (info) => {
-  const {
-    timestamp, level, message, ...args
-  } = info;
-
-  const ts = timestamp.replace('T', ' ').replace('Z', ' ');
-  return `${ts} [${level}]: ${message} ${Object.keys(args).length ? JSON.stringify(args/* , null, 2 */) : ''}`;
+const log = (loglevel, level, ...params) => {
+  if (!(loglevel >= 0) || loglevel >= level) {
+    let output = console.log;
+    let color = (r) => r;
+    let logname = ':';
+    switch (level) {
+      case 0:
+        output = console.error;
+        color = colors.reset.red.bold;
+        logname = '[error]:';
+        break;
+      case 1:
+        output = console.warn;
+        color = colors.reset.yellow.bold;
+        logname = '[warn]:';
+        break;
+      case 2:
+        output = console.info;
+        color = colors.reset;
+        logname = '[info]:';
+        break;
+      case 3:
+        output = console.log;
+        color = colors.reset.cyan;
+        logname = '[debug]:';
+        break;
+    }
+    params =
+      params.map((p) => typeof p === 'object' ? color(JSON.stringify(p, null, level === 3 ? 2 : null)) : color(p));
+    output(color('[' + new Date().toISOString() + ']'), color(logname), ...params);
+  }
 };
 
-const consoleFormat = winston.format.combine(
-  winston.format.colorize(),
-  winston.format.timestamp(),
-  winston.format.align(),
-  winston.format.printf(printf)
-);
-
-const fileFormat = winston.format.combine(
-  winston.format.timestamp(),
-  winston.format.printf(printf)
-);
-
 module.exports = (loglevel = 'info', logpath = null) => {
-  const logger = winston.createLogger({
-    exitOnError: false,
-    transports: [
-      new winston.transports.Console({
-        handleExceptions: true,
-        level: loglevel,
-        format: consoleFormat
-      }),
-      // new winston.transports.File({ filename: 'error.log', level: 'error' }),
-      new winston.transports.File({
-        filename: path.resolve(logpath, 'error.log'),
-        handleExceptions: true,
-        level: 'error',
-        format: fileFormat
-      }),
-      new winston.transports.File({
-        filename: path.resolve(logpath, 'combined.log'),
-        handleExceptions: true,
-        level: 'info',
-        format: fileFormat
-      }),
-      new winston.transports.File({
-        filename: path.resolve(logpath, 'combined.json'),
-        handleExceptions: true,
-        level: 'info'
-      })
-    ]
-  });
-
-  const selfCheck = (message, data, rest) => {
-    if (rest.length) {
-      logger.error('LOGGER: too many parameters', rest);
-    }
-    if (typeof data !== 'object' && typeof data !== 'undefined') {
-      logger.error('LOGGER: wrong type for data', {type: typeof data, data: data});
-    }
-  };
+  let loglevelId = 3;
+  switch (loglevel) {
+    case 'error':
+      loglevelId = 0;
+      break;
+    case 'warn':
+      loglevelId = 1;
+      break;
+    case 'debug':
+      loglevelId = 3;
+      break;
+    case 'info':
+    default:
+      loglevelId = 2;
+      break;
+  }
 
   return {
-    error: (message, data, ...rest) => {
-      selfCheck(message, data, rest);
-      logger.error(message, data);
+    error: (...params) => {
+      log(loglevelId, 0, ...params);
     },
-    warn: (message, data, ...rest) => {
-      selfCheck(message, data, rest);
-      logger.warn(message, data);
+    warn: (...params) => {
+      log(loglevelId, 1, ...params);
     },
-    info: (message, data, ...rest) => {
-      selfCheck(message, data, rest);
-      logger.info(message, data);
+    info: (...params) => {
+      log(loglevelId, 2, ...params);
     },
-    debug: (message, data, ...rest) => {
-      selfCheck(message, data, rest);
-      logger.debug(message, data);
+    debug: (...params) => {
+      log(loglevelId, 3, ...params);
     }
   };
 };
