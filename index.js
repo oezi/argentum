@@ -16,6 +16,7 @@ const defaults = {
   port: 80,
   staticFiles: ['./dist'],
   compression: true,
+  session: false,
   log: {
     level: 'info',
     path: null
@@ -67,6 +68,12 @@ const argentum = async (settings = {}) => {
 
     if (conf.compression) {
       app.express.use(compression());
+    }
+
+    if (conf.session) {
+      app.express.use(session({
+        secret: conf.session
+      }));
     }
 
     app.express.listen(conf.port);
