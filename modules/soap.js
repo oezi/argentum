@@ -36,7 +36,13 @@ module.exports = async (wsdl, options = {}) => {
     get: (target, prop) => {
       // TODO: richtig prüfen, ob das auch ne SOAP-Function ist, und nicht nur "toString" oder sowas...
       if (typeof client[prop] === 'function' && functions[prop]) {
-        return async (args) => (await client[prop](removeNullAndUndefined(args))).result.return;
+        return async (args) => {
+          const response = (await client[prop](removeNullAndUndefined(args)));
+          if (response && response.result) {
+            return response.result.return;
+          }
+          return null;
+        };
       }
       return client[prop];
     }
