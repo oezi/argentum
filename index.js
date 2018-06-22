@@ -72,7 +72,9 @@ const argentum = async (settings = {}) => {
 
     if (conf.session) {
       app.express.use(session({
-        secret: conf.session
+        secret: conf.session,
+        resave: true,
+        saveUninitialized: true
       }));
     }
 
