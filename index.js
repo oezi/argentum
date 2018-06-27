@@ -56,6 +56,10 @@ const argentum = async (settings = {}) => {
       extended: true
     }));
 
+    if (conf.compression) {
+      app.express.use(compression());
+    }
+
     if (conf.staticFiles) {
       if (conf.staticFiles.length) {
         conf.staticFiles.forEach((path) => {
@@ -64,10 +68,6 @@ const argentum = async (settings = {}) => {
       } else {
         app.express.use(express.static(conf.staticFiles));
       }
-    }
-
-    if (conf.compression) {
-      app.express.use(compression());
     }
 
     if (conf.session) {
