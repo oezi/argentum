@@ -1,8 +1,15 @@
-const strongSoap = require('strong-soap');
+const soap = require('soap');
 
-module.exports = async (wsdl, options = {}) => {
-  const client = await new Promise((resolve, reject) => {
-    strongSoap.soap.createClient(wsdl, options, (err, client) => {
+const removeNullAndUndefined = (obj) => {
+  if (obj || typeof obj === 'object') {
+    Object.keys(obj).forEach((key) => (obj[key] == null) && delete obj[key]);
+  }
+  return obj;
+};
+
+module.exports = (wsdl, options = {}) => {
+  const getClient = async () => new Promise((resolve, reject) => {
+    soap.createClient(wsdl, (err, client) => {
       if (err) {
         reject(err);
       } else {
@@ -10,42 +17,35 @@ module.exports = async (wsdl, options = {}) => {
       }
     });
   });
-
-  const functions = {};
-  const r = (d) => {
-    Object.keys(d).forEach((k) => {
-      if (d[k] && d[k].name && d[k].soapVersion) {
-        functions[k] = true;
-      } else {
-        r(d[k]);
-      }
-    });
-  };
-  r(client.describe());
-
-  client.argentumSoapClient = {wsdl};
-
-  const removeNullAndUndefined = (obj) => {
-    if (obj || typeof obj === 'object') {
-      Object.keys(obj).forEach((key) => (obj[key] == null) && delete obj[key]);
-    }
-    return obj;
-  };
-
+  let client = null;
+  const target = {wsdl, options};
   const handler = {
     get: (target, prop) => {
-      // TODO: richtig prüfen, ob das auch ne SOAP-Function ist, und nicht nur "toString" oder sowas...
-      if (typeof client[prop] === 'function' && functions[prop]) {
-        return async (args) => {
-          const response = (await client[prop](removeNullAndUndefined(args)));
-          if (response && response.result) {
-            return response.result.return;
-          }
-          return null;
-        };
+      if (typeof target[prop] !== 'undefined') {
+        return target[prop];
       }
-      return client[prop];
+      switch (prop) {
+        case 'toJSON':
+          return undefined;
+        default:
+          return async (paramObject, ...args) => {
+            if (!client) {
+              client = await getClient();
+              target.lastRequest = client.lastRequest;
+            }
+            if (client[prop + 'Async']) {
+              const result = await client[prop + 'Async'](removeNullAndUndefined(paramObject), ...args);
+              // console.debug('soapcall', prop, '(',paramObject,') =>', result);
+              return ((result[0] || {}).return || null);
+            }
+            if (client[prop]) {
+              return client[prop](...args);
+            }
+            return null;
+          };
+      }
     }
   };
-  return () => new Proxy({argentumSoapClient: null}, handler);
+
+  return new Proxy(target, handler);
 };

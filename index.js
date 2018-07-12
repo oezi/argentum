@@ -42,7 +42,7 @@ const argentum = async (settings = {}) => {
 
   // soap
   if (conf.soap.wsdl) {
-    app.soap = (await soap(conf.soap.wsdl || '', conf.soap.options || {}))();
+    app.soap = soap(conf.soap.wsdl, conf.soap.options);
   }
 
   // express
