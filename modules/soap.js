@@ -28,14 +28,13 @@ module.exports = (wsdl, options = {}) => {
         case 'toJSON':
           return undefined;
         default:
-          return async (paramObject, ...args) => {
+          return async (paramObject = {}, ...args) => {
             if (!client) {
               client = await getClient();
               target.lastRequest = client.lastRequest;
             }
             if (client[prop + 'Async']) {
               const result = await client[prop + 'Async'](removeNullAndUndefined(paramObject), ...args);
-              // console.debug('soapcall', prop, '(',paramObject,') =>', result);
               return ((result[0] || {}).return || null);
             }
             if (client[prop]) {
