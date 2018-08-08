@@ -37,7 +37,7 @@ const log = (loglevel, level, ...params) => {
       }
       return value;
     }, (level === 0 || level === 3) ? 2 : null)) : color(p)); */
-    params = params.map((p) => color(p));
+    params = params.map((p) => p != null ? color(p) : p);
     output(color('[' + new Date().toISOString() + ']'), color(logname), ...params);
   }
 };
