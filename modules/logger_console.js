@@ -27,8 +27,17 @@ const log = (loglevel, level, ...params) => {
         logname = '[debug]:\t';
         break;
     }
-    params =
-      params.map((p) => typeof p === 'object' ? color(JSON.stringify(p, null, level === 3 ? 2 : null)) : color(p));
+    /* params = params.map((p) => (typeof p === 'object' && !(p instanceof Error)) ? color(JSON.stringify(p, function (key, value) {
+      if (value && typeof value === 'object' && !value.toJSON) {
+        const replacement = {};
+        Object.getOwnPropertyNames(value).forEach(function (key) {
+          replacement[key] = value[key];
+        });
+        return replacement;
+      }
+      return value;
+    }, (level === 0 || level === 3) ? 2 : null)) : color(p)); */
+    params = params.map((p) => color(p));
     output(color('[' + new Date().toISOString() + ']'), color(logname), ...params);
   }
 };
