@@ -25,6 +25,6 @@
     "winston": "^3.0.0-rc6"
   },
   "devDependencies": {
-    "hydrargyrion": "git+https://73460b035cd244121648a1a1973ab0b146dc9390:x-oauth-basic@github.com/oezi/hydrargyrion.git"
+    "hydrargyrion": "oezi/hydrargyrion"
   }
 }
