@@ -37,6 +37,11 @@ const argentum = async (settings = {}) => {
 
   const app = {conf};
 
+  // formater
+  app.format = (strings, ...values) =>
+    strings.map((str, key) =>
+      str + (typeof values[key] === 'undefined' ? '' : JSON.stringify(values[key]))).join('');
+
   // logger
   app.log = argentum.logger(conf.log.level || 'info', conf.log.path || null);
 
@@ -78,7 +83,13 @@ const argentum = async (settings = {}) => {
       }));
     }
 
-    app.express.listen(conf.port);
+    const server = require('http').Server(app.express);
+
+    if (conf.io) {
+      app.io = require('socket.io')(server);
+    }
+
+    server.listen(conf.port);
   }
 
   return app;
