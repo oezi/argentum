@@ -13,6 +13,8 @@ const soap = require('./modules/soap');
 const logger = require('./modules/logger');
 
 const defaults = {
+  io: false,
+  limit: '32mb',
   port: 80,
   staticFiles: ['./dist'],
   compression: true,
@@ -56,8 +58,11 @@ const argentum = async (settings = {}) => {
     app.express.disable('x-powered-by');
     app.express.disable('etag');
     app.express.use(helmet());
-    app.express.use(argentum.bodyparser.json());
+    app.express.use(argentum.bodyparser.json({
+      limit: conf.limit
+    }));
     app.express.use(argentum.bodyparser.urlencoded({
+      limit: conf.limit,
       extended: true
     }));
 
