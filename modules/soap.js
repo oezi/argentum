@@ -27,8 +27,13 @@ module.exports = (wsdl, options = {}) => {
       switch (prop) {
         case 'toJSON':
           return undefined;
+        case typeof prop === 'symbol':
+          return prop;
         default:
           return async (paramObject = {}, ...args) => {
+      			if(typeof prop === 'symbol'){
+      				return null;
+      			}
             if (!client) {
               client = await getClient();
               target.lastRequest = client.lastRequest;
