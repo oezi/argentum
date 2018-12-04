@@ -84,7 +84,10 @@ const argentum = async (settings = {}) => {
       app.express.use(session({
         secret: conf.session,
         resave: true,
-        saveUninitialized: true
+        saveUninitialized: true,
+        cookie: {
+          maxAge: 1000*60*60*24*30
+        }
       }));
     }
 
