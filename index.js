@@ -88,6 +88,22 @@ const argentum = async (settings = {}) => {
           maxAge: 1000*60*60*24*30
         }
       }));
+    } else if (conf.pgsession && conf.db) {
+      app.express.use(session({
+        resave: false,
+        saveUninitialized: false,
+        rolling: true,
+        cookie: {
+          secure: false,
+          httpOnly: true,
+          maxAge: 60 * 60 * 1000 * 12
+        },
+        ...conf.pgsession,
+        store: new PgSession({
+          conObject: conf.db,
+          schemaName: conf.db.schema || 'public'
+        })
+      }));
     }
 
     const server = require('http').Server(app.express);
