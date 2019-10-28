@@ -56,6 +56,9 @@ const argentum = async (settings = {}) => {
     app.express = express();
     app.express.disable('x-powered-by');
     app.express.disable('etag');
+    if (conf.proxy) {
+      app.express.set('trust proxy', 1);
+    }
     app.express.use(helmet());
     app.express.use(argentum.bodyparser.json({
       limit: conf.limit
