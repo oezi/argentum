@@ -117,7 +117,7 @@ const argentum = async (settings = {}) => {
     let server;
 
     // ssl.key und ssl.cert sind die filecontents der entsprechenden Zertifikatsdatein (fs.readFileSync)
-    if (conf.ssl && conf.ssl?.key && conf.ssl?.cert) {
+    if (conf.ssl && conf.ssl.key && conf.ssl.cert) {
       const sslConfig = sslconf('modern');
       const sslCredentials = {
         key: conf.ssl.key,
