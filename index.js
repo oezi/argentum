@@ -1,3 +1,10 @@
+const http = require('http');
+const https = require('https');
+
+const soap = require('./modules/soap');
+const logger = require('./modules/logger');
+
+const sslconf = require('ssl-config');
 const express = require('express');
 const compression = require('compression');
 const helmet = require('helmet');
@@ -7,9 +14,6 @@ const session = require('express-session');
 const csrf = require('csurf');
 const cors = require('cors');
 const PgSession = require('connect-pg-simple')(session);
-
-const soap = require('./modules/soap');
-const logger = require('./modules/logger');
 
 const defaults = {
   io: false,
@@ -25,7 +29,8 @@ const defaults = {
   soap: {
     wsdl: null,
     options: null
-  }
+  },
+  ssl: false
 };
 const argentum = async (settings = {}) => {
   const conf = {...defaults, ...settings};
@@ -88,7 +93,7 @@ const argentum = async (settings = {}) => {
         resave: true,
         saveUninitialized: true,
         cookie: {
-          maxAge: 1000*60*60*24*30
+          maxAge: 1000 * 60 * 60 * 24 * 30
         }
       }));
     } else if (conf.pgsession && conf.db) {
@@ -109,7 +114,23 @@ const argentum = async (settings = {}) => {
       }));
     }
 
-    const server = require('http').Server(app.express);
+    let server;
+
+    // ssl.key und ssl.cert sind die filecontents der entsprechenden Zertifikatsdatein (fs.readFileSync)
+    if (conf.ssl && conf.ssl?.key && conf.ssl?.cert) {
+      const sslConfig = sslconf('modern');
+      const sslCredentials = {
+        key: conf.ssl.key,
+        cert: conf.ssl.cert,
+        ciphers: sslConfig.ciphers,
+        honorCipherOrder: true,
+        secureOptions: sslConfig.minimumTLSVersion
+      };
+      server = https.createServer(sslCredentials, app.express);
+    } else {
+      server = http.createServer(app.express);
+    }
+    // server = require('http').Server(app.express);
 
     if (conf.io) {
       app.io = require('socket.io')(server);
