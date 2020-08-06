@@ -1,6 +1,6 @@
 const colors = require('colors/safe');
 
-const log = (loglevel, level, ...params) => {
+const log = (loglevel, level, colorize = true, ...params) => {
   if (!(loglevel >= 0) || loglevel >= level) {
     let output = console.log;
     let color = (r) => r;
@@ -37,12 +37,16 @@ const log = (loglevel, level, ...params) => {
       }
       return value;
     }, (level === 0 || level === 3) ? 2 : null)) : color(p)); */
-    params = params.map((p) => p != null ? color(p) : p);
-    output(color('[' + new Date().toISOString() + ']'), color(logname), ...params);
+    if (colorize) {
+      params = params.map((p) => p != null ? color(p) : p);
+      output(color('[' + new Date().toISOString() + ']'), color(logname), ...params);
+    } else {
+      output('[' + new Date().toISOString() + ']', logname, ...params);
+    }
   }
 };
 
-module.exports = (loglevel = 'info', logpath = null) => {
+module.exports = (loglevel = 'info', logpath = null, colorize = null) => {
   let loglevelId = 3;
   switch (loglevel) {
     case 'error':
@@ -62,16 +66,16 @@ module.exports = (loglevel = 'info', logpath = null) => {
 
   return {
     error: (...params) => {
-      log(loglevelId, 0, ...params);
+      log(loglevelId, 0, colorize, ...params);
     },
     warn: (...params) => {
-      log(loglevelId, 1, ...params);
+      log(loglevelId, 1, colorize, ...params);
     },
     info: (...params) => {
-      log(loglevelId, 2, ...params);
+      log(loglevelId, 2, colorize, ...params);
     },
     debug: (...params) => {
-      log(loglevelId, 3, ...params);
+      log(loglevelId, 3, colorize, ...params);
     }
   };
 };

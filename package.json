@@ -13,19 +13,19 @@
     "body-parser": "1.19.0",
     "colors": "1.4.0",
     "compression": "1.7.4",
-    "connect-pg-simple": "6.0.1",
+    "connect-pg-simple": "6.1.0",
     "cors": "2.8.5",
-    "csurf": "1.10.0",
+    "csurf": "1.11.0",
     "express": "4.17.1",
-    "express-session": "1.17.0",
-    "helmet": "3.21.2",
-    "pg-promise": "9.3.3",
-    "soap": "0.30.0",
+    "express-session": "1.17.1",
+    "helmet": "4.0.0",
+    "pg-promise": "10.5.8",
+    "soap": "0.32.0",
     "socket.io": "2.3.0",
     "ssl-config": "1.0.0",
-    "winston": "3.2.1"
+    "winston": "3.3.3"
   },
   "devDependencies": {
-    "hydrargyrion": "oezi/hydrargyrion"
+    "hydrargyrion": "git+https://git.mdsi.de/project/hydrargyrion"
   }
 }
