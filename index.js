@@ -30,7 +30,8 @@ const defaults = {
     wsdl: null,
     options: null
   },
-  ssl: false
+  ssl: false,
+  ignoreCSP: false
 };
 const argentum = async (settings = {}) => {
   const conf = {...defaults, ...settings};
@@ -64,7 +65,16 @@ const argentum = async (settings = {}) => {
     if (conf.proxy) {
       app.express.set('trust proxy', 1);
     }
-    app.express.use(helmet());
+
+    if (conf.ignoreCSP) {
+      app.express.use(helmet({
+        contentSecurityPolicy: {
+          reportOnly: true
+        }
+      }));
+    } else {
+      app.express.use(helmet());
+    }
     app.express.use(argentum.bodyparser.json({
       limit: conf.limit
     }));
