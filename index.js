@@ -31,7 +31,7 @@ const defaults = {
     options: null
   },
   ssl: false,
-  ignoreCSP: false
+  ignoreCSP: true
 };
 const argentum = async (settings = {}) => {
   const conf = {...defaults, ...settings};
@@ -66,7 +66,11 @@ const argentum = async (settings = {}) => {
       app.express.set('trust proxy', 1);
     }
 
-    if (conf.ignoreCSP) {
+    if (conf.ignoreCSP === true) {
+      app.express.use(helmet({
+        contentSecurityPolicy: false
+      }));
+    } else if (conf.ignoreCSP === 'reportOnly') {
       app.express.use(helmet({
         contentSecurityPolicy: {
           reportOnly: true
