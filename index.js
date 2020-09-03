@@ -94,10 +94,10 @@ const argentum = async (settings = {}) => {
     if (conf.staticFiles) {
       if (conf.staticFiles.length) {
         conf.staticFiles.forEach((path) => {
-          app.express.use(express.static(path));
+          app.express.use(express.static(path, {etag: false}));
         });
       } else {
-        app.express.use(express.static(conf.staticFiles));
+        app.express.use(express.static(conf.staticFiles, {etag: false}));
       }
     }
 
