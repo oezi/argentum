@@ -50,7 +50,10 @@ const argentum = async (settings = {}) => {
       str + (typeof values[key] === 'undefined' ? '' : JSON.stringify(values[key]))).join('');
 
   // logger
-  app.log = argentum.logger(conf.log.level || 'info', conf.log.path || null, conf.log.colorize || null);
+  app.log = argentum.logger(conf.log.level || 'info',
+    conf.log.path || null, conf.log.colorize || null,
+    conf.log.console || null,
+    conf.log.file || null);
 
   // soap
   if (conf.soap.wsdl) {
