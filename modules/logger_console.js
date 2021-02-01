@@ -1,6 +1,7 @@
 const colors = require('colors/safe');
 
 const log = (loglevel, level, colorize = true, ...params) => {
+  //Das ist nicht unwichtig
   if (!(loglevel >= 0) || loglevel >= level) {
     let output = console.log;
     let color = (r) => r;

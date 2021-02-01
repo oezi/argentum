@@ -11,12 +11,6 @@ const printf = (info) => {
   return `${ts} [${level}]: ${message} ${Object.keys(args).length ? JSON.stringify(args/* , null, 2 */) : ''}`;
 };
 
-const consoleFormat = winston.format.combine(
-  winston.format.colorize(),
-  winston.format.timestamp(),
-  winston.format.align(),
-  winston.format.printf(printf)
-);
 
 const fileFormat = winston.format.combine(
   winston.format.timestamp(),
@@ -24,14 +18,7 @@ const fileFormat = winston.format.combine(
 );
 
 module.exports = (loglevel = 'info', logpath = null) => {
-  const transports = [
-    //um die dioppelte Logausgabe in der Console zu entfernen
-    // new winston.transports.Console({
-    //   handleExceptions: true,
-    //   level: loglevel,
-    //   format: consoleFormat
-    // })
-  ];
+  const transports = [];
   if (logpath) {
     transports.push(new winston.transports.File({
       filename: path.resolve(logpath, 'error.log'),
@@ -45,11 +32,12 @@ module.exports = (loglevel = 'info', logpath = null) => {
       level: 'info',
       format: fileFormat
     }));
-    transports.push(new winston.transports.File({
-      filename: path.resolve(logpath, 'combined.json'),
-      handleExceptions: true,
-      level: 'info'
-    }));
+    //Die json habe ich wieder auskommentiert, falls jemand die will kann er Sie einkommentieren
+    // transports.push(new winston.transports.File({
+    //   filename: path.resolve(logpath, 'combined.json'),
+    //   handleExceptions: true,
+    //   level: 'info'
+    // }));
   }
 
   const logger = winston.createLogger({
@@ -66,22 +54,64 @@ module.exports = (loglevel = 'info', logpath = null) => {
     }
   };
 
+  const log = (loglevel, level, colorize = true, message=null, data=null) => {
+
+    //level -> log art des eintrag
+    //loglevel -> allgemeine einstellung
+    if (!(loglevel >= 0) || loglevel >= level) {
+      switch (level) {
+        case 0:
+          selfCheck(message, data, []);
+          logger.error(message, data);
+          break;
+        case 1:
+          selfCheck(message, data, []);
+          logger.warn(message, data);
+          break;
+        case 2:
+          selfCheck(message, data, []);
+          logger.info(message, data);
+          break;
+        case 3:
+          selfCheck(message, data, []);
+          logger.debug(message, data);
+          break;
+      }
+    }else{
+      // console.log('Ausgabe wird nicht getätigt weil');
+      // console.log( loglevel +' >= '+level);
+    }
+  };
+
+  let loglevelId = 3;
+  switch (loglevel) {
+    case 'error':
+      loglevelId = 0;
+      break;
+    case 'warn':
+      loglevelId = 1;
+      break;
+    case 'debug':
+      loglevelId = 3;
+      break;
+    case 'info':
+    default:
+      loglevelId = 2;
+      break;
+  }
+
   return {
-    error: (message, data, ...rest) => {
-      selfCheck(message, data, rest);
-      logger.error(message, data);
+    error: (...params) => {
+      log(loglevelId, 0, null, ...params);
     },
-    warn: (message, data, ...rest) => {
-      selfCheck(message, data, rest);
-      logger.warn(message, data);
+    warn: (...params) => {
+      log(loglevelId, 1, null, ...params);
     },
-    info: (message, data, ...rest) => {
-      selfCheck(message, data, rest);
-      logger.info(message, data);
+    info: (...params) => {
+      log(loglevelId, 2, null, ...params);
     },
-    debug: (message, data, ...rest) => {
-      selfCheck(message, data, rest);
-      logger.debug(message, data);
+    debug: (...params) => {
+      log(loglevelId, 3, null, ...params);
     }
   };
 };
