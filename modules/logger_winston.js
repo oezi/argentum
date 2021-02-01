@@ -25,11 +25,12 @@ const fileFormat = winston.format.combine(
 
 module.exports = (loglevel = 'info', logpath = null) => {
   const transports = [
-    new winston.transports.Console({
-      handleExceptions: true,
-      level: loglevel,
-      format: consoleFormat
-    })
+    //um die dioppelte Logausgabe in der Console zu entfernen
+    // new winston.transports.Console({
+    //   handleExceptions: true,
+    //   level: loglevel,
+    //   format: consoleFormat
+    // })
   ];
   if (logpath) {
     transports.push(new winston.transports.File({
@@ -57,7 +58,7 @@ module.exports = (loglevel = 'info', logpath = null) => {
   });
 
   const selfCheck = (message, data, rest) => {
-    if (rest.length) {
+    if (rest.length && rest["0"]) {
       logger.error('LOGGER: too many parameters', rest);
     }
     if (typeof data !== 'object' && typeof data !== 'undefined') {

@@ -18,16 +18,14 @@ module.exports = (loglevel = 'info', logpath = null, colorize = null, console2 =
       loglevelId = 2;
       break;
   }
-console.log('loglevel , logpath , colorize, console2, file');
-console.log(loglevel , logpath , colorize, console2, file);
- // debug /tmp null true null
+
   return {
     error: (...params) => {
       if (console2) {
         logger_console(loglevelId, logpath, colorize, ...params).error(...params);
       }
       if (file) {
-        logger_winston(loglevel, logpath);
+        logger_winston(loglevel, logpath).error(...params, null);
       }
     },
     warn: (...params) => {
@@ -35,7 +33,7 @@ console.log(loglevel , logpath , colorize, console2, file);
         logger_console(loglevelId, logpath, colorize, ...params).warn(...params);
       }
       if (file) {
-        logger_winston(loglevel, logpath);
+        logger_winston(loglevel, logpath).warn(...params, null);
       }
     },
     info: (...params) => {
@@ -43,7 +41,7 @@ console.log(loglevel , logpath , colorize, console2, file);
         logger_console(loglevelId, logpath, colorize, ...params).info(...params);
       }
       if (file) {
-        logger_winston(loglevel, logpath);
+        logger_winston(loglevel, logpath).info(...params, null);
       }
     },
     debug: (...params) => {
@@ -51,7 +49,7 @@ console.log(loglevel , logpath , colorize, console2, file);
         logger_console(loglevelId, logpath, colorize, ...params).debug(...params);
       }
       if (file) {
-        logger_winston(loglevel, logpath);
+        logger_winston(loglevel, logpath).debug(...params, null);
       }
     }
   };
