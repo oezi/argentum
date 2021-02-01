@@ -2,6 +2,8 @@ const path = require('path');
 
 const winston = require('winston');
 
+import 'winston-daily-rotate-file';
+
 const printf = (info) => {
   const {
     timestamp, level, message, ...args
@@ -20,17 +22,28 @@ const fileFormat = winston.format.combine(
 module.exports = (loglevel = 'info', logpath = null) => {
   const transports = [];
   if (logpath) {
-    transports.push(new winston.transports.File({
+    transports.push(new winston.transports.DailyRotateFile({
       filename: path.resolve(logpath, 'error.log'),
       handleExceptions: true,
       level: 'error',
-      format: fileFormat
+      dirname: logpath,
+      datePattern: 'YYYY-MM-DD',
+      zippedArchive: false, /* true - gezippte archive koennen nicht autom. geloescht werden; derzeit offener bug */
+      /* https://github.com/winstonjs/winston-daily-rotate-file/issues/125 */
+      maxSize: '10m',
+      maxFiles: 5
     }));
-    transports.push(new winston.transports.File({
+    transports.push(new winston.transports.DailyRotateFile({
       filename: path.resolve(logpath, 'combined.log'),
       handleExceptions: true,
       level: 'info',
-      format: fileFormat
+      format: fileFormat,
+      dirname: logpath,
+      datePattern: 'YYYY-MM-DD',
+      zippedArchive: false, /* true - gezippte archive koennen nicht autom. geloescht werden; derzeit offener bug */
+      /* https://github.com/winstonjs/winston-daily-rotate-file/issues/125 */
+      maxSize: '10m',
+      maxFiles: 5
     }));
     //Die json habe ich wieder auskommentiert, falls jemand die will kann er Sie einkommentieren
     // transports.push(new winston.transports.File({
