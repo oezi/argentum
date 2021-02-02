@@ -91,8 +91,8 @@ module.exports = (loglevel = 'info', logpath = null) => {
           break;
       }
     }else{
-      // console.log('Ausgabe wird nicht getätigt weil');
-      // console.log( loglevel +' >= '+level);
+      console.log('Ausgabe wird nicht getätigt weil');
+      console.log( loglevel +' >= '+level);
     }
   };
 
