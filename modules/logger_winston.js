@@ -2,7 +2,7 @@ const path = require('path');
 
 const winston = require('winston');
 
-import 'winston-daily-rotate-file';
+const rotateFile= require('winston-daily-rotate-file');
 
 const printf = (info) => {
   const {
@@ -22,7 +22,7 @@ const fileFormat = winston.format.combine(
 module.exports = (loglevel = 'info', logpath = null) => {
   const transports = [];
   if (logpath) {
-    transports.push(new winston.transports.DailyRotateFile({
+    transports.push(new rotateFile({
       filename: path.resolve(logpath, 'error.log'),
       handleExceptions: true,
       level: 'error',
@@ -33,7 +33,7 @@ module.exports = (loglevel = 'info', logpath = null) => {
       maxSize: '10m',
       maxFiles: 5
     }));
-    transports.push(new winston.transports.DailyRotateFile({
+    transports.push(new rotateFile({
       filename: path.resolve(logpath, 'combined.log'),
       handleExceptions: true,
       level: 'info',
