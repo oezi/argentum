@@ -26,6 +26,7 @@ module.exports = (loglevel = 'info', logpath = null) => {
       filename: path.resolve(logpath, 'error.log'),
       handleExceptions: true,
       level: 'error',
+      format: fileFormat,
       dirname: logpath,
       datePattern: 'YYYY-MM-DD',
       zippedArchive: false, /* true - gezippte archive koennen nicht autom. geloescht werden; derzeit offener bug */
@@ -36,7 +37,7 @@ module.exports = (loglevel = 'info', logpath = null) => {
     transports.push(new rotateFile({
       filename: path.resolve(logpath, 'combined.log'),
       handleExceptions: true,
-      level: 'info',
+      level: 'debug',
       format: fileFormat,
       dirname: logpath,
       datePattern: 'YYYY-MM-DD',
@@ -71,6 +72,7 @@ module.exports = (loglevel = 'info', logpath = null) => {
 
     //level -> log art des eintrag
     //loglevel -> allgemeine einstellung
+    message = JSON.stringify(message);
     if (!(loglevel >= 0) || loglevel >= level) {
       switch (level) {
         case 0:
@@ -86,13 +88,11 @@ module.exports = (loglevel = 'info', logpath = null) => {
           logger.info(message, data);
           break;
         case 3:
+          console.log('sollte debuggen');
           selfCheck(message, data, []);
           logger.debug(message, data);
           break;
       }
-    }else{
-      console.log('Ausgabe wird nicht getätigt weil');
-      console.log( loglevel +' >= '+level);
     }
   };
 

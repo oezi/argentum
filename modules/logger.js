@@ -1,6 +1,6 @@
 const logger_console = require('./logger_console');
 const logger_winston = require('./logger_winston');
-module.exports = (loglevel = 'info', logpath = null, colorize = null, console2 = true, file = true) => {
+module.exports = (loglevel = 'debug', logpath = null, colorize = null, console2 = true, file = true) => {
 
   let loglevelId = 3;
   switch (loglevel) {
@@ -25,7 +25,7 @@ module.exports = (loglevel = 'info', logpath = null, colorize = null, console2 =
         logger_console(loglevelId, logpath, colorize, ...params).error(...params);
       }
       if (file) {
-        logger_winston(loglevel, logpath).error(...params, null);
+        logger_winston(loglevel, logpath).error(...params);
       }
     },
     warn: (...params) => {
@@ -33,7 +33,7 @@ module.exports = (loglevel = 'info', logpath = null, colorize = null, console2 =
         logger_console(loglevelId, logpath, colorize, ...params).warn(...params);
       }
       if (file) {
-        logger_winston(loglevel, logpath).warn(...params, null);
+        logger_winston(loglevel, logpath).warn(...params);
       }
     },
     info: (...params) => {
@@ -41,7 +41,7 @@ module.exports = (loglevel = 'info', logpath = null, colorize = null, console2 =
         logger_console(loglevelId, logpath, colorize, ...params).info(...params);
       }
       if (file) {
-        logger_winston(loglevel, logpath).info(...params, null);
+        logger_winston(loglevel, logpath).info(...params);
       }
     },
     debug: (...params) => {
@@ -49,7 +49,7 @@ module.exports = (loglevel = 'info', logpath = null, colorize = null, console2 =
         logger_console(loglevelId, logpath, colorize, ...params).debug(...params);
       }
       if (file) {
-        logger_winston(loglevel, logpath).debug(...params, null);
+        logger_winston(loglevel, logpath).debug(...params);
       }
     }
   };
