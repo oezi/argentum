@@ -1,6 +1,6 @@
 const logger_console = require('./logger_console');
 const logger_winston = require('./logger_winston');
-module.exports = (loglevel = 'debug', logpath = null, colorize = null, console2 = true, file = true) => {
+module.exports = (loglevel = 'debug', logpath = null, colorize = null, console2 = true, file = false) => {
 
   let loglevelId = 3;
   switch (loglevel) {
