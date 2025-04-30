@@ -20,7 +20,7 @@
     "express-session": "1.17.1",
     "helmet": "4.0.0",
     "pg-promise": "10.5.8",
-    "soap": "0.32.0",
+    "soap": "1.1.9",
     "socket.io": "2.3.0",
     "ssl-config": "1.0.0",
     "winston": "3.3.3"
